@@ -1,7 +1,6 @@
 import datetime as dt
-name = input("Enter your name: ")
-course = input("Enter patron's registered course: ")
-class_time = input("Enter appropriate course timeslots: ")
+import tkinter as tk
+
 
 #The goal of this program is to automate the process for drafting text messages for potential students.
 #Input your name, the patron's class, and the time scheduled.
@@ -110,7 +109,58 @@ class_schedule = {
 }
 
 def createMessage(name, course, class_time):
-    print(f"""Hi, this is {name} from House of Champions. We wanted to follow up with you to schedule an introduction session for our {course} class.
-Our next available time is at {class_time}. Please let us know if that time works for you. Best regards.""")
+    return (f"Hi, this is {name} from House of Champions. "
+            f"We wanted to follow up with you to schedule an "
+            f"introduction session for our {course} class. "
+            f"Our next available time is at {class_time}. "
+            f"Please let us know if that time works for you. "
+            f"Best regards.")
 
-createMessage(name, course, class_time)
+def generate_message():
+    name = name_entry.get()
+    course = course_entry.get()
+    class_time = class_time_entry.get()
+    message = createMessage(name, course, class_time)
+    output_text.delete(1.0, tk.END)  # Clear previous text
+    output_text.insert(tk.END, message)  # Insert new message
+
+def copy_to_clipboard():
+    window.clipboard_clear()  # Clear the clipboard
+    window.clipboard_append(output_text.get(1.0, tk.END))  # Copy text from the text box
+
+window = tk.Tk()
+
+greeting = tk.Label(text="HOC Auto Messenger\n", font=("Arial", 24, "bold"))
+greeting.pack()
+
+instructions = tk.Label(text="Enter your name, the patron's class, and the time scheduled. \n\n")
+instructions.pack()
+
+name_label = tk.Label(text="Enter your name: ")
+name_entry = tk.Entry()
+name_label.pack()
+name_entry.pack()
+
+course_label = tk.Label(text="Enter patron's registered course: ")
+course_entry = tk.Entry()
+course_label.pack()
+course_entry.pack()
+
+class_time_label = tk.Label(text="Enter appropriate course timeslots: ")
+class_time_entry = tk.Entry()
+class_time_label.pack()
+class_time_entry.pack()
+
+# Text box for output
+output_text = tk.Text(window, height=10, width=50)
+output_text.pack()
+
+# Button to generate message
+generate_button = tk.Button(window, text="Generate Message", command=generate_message)
+generate_button.pack()
+
+# Button to copy to clipboard
+copy_button = tk.Button(window, text="Copy to Clipboard", command=copy_to_clipboard)
+copy_button.pack()
+
+window.mainloop()
